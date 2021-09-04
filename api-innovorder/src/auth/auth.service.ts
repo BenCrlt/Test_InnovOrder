@@ -26,6 +26,8 @@ export class AuthService {
             if (userFound) {
                 await this.verifyPassword(user.password, userFound.password);
                 return userFound;
+            } else {
+                throw new HttpException("Invalid credentials provided", HttpStatus.BAD_REQUEST);
             }
         } catch(error) {
             throw new HttpException("Invalid credentials provided", HttpStatus.BAD_REQUEST);
@@ -34,7 +36,7 @@ export class AuthService {
     }
 
     async verifyPassword(plainTextPassword: string, hashedPassword: string) {
-        const isPasswordMatching = bcrypt.compare(
+        const isPasswordMatching = await bcrypt.compare(
             plainTextPassword,
             hashedPassword
         );
