@@ -17,10 +17,4 @@ export class AuthController {
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('test')
-  getStringTest() {
-    return 'Tu es dans une route sécurisée'
-  }
 }
