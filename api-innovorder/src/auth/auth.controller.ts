@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Request, Post, Body } from '@nestjs/common';
+import { Controller, UseGuards, Request, Post, Body, Get } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,6 +15,12 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req) {
-    return req.user;
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('test')
+  getStringTest() {
+    return 'Tu es dans une route sécurisée'
   }
 }
