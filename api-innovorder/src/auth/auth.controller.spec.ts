@@ -14,9 +14,9 @@ describe('AuthController', () => {
     authController = auth.get<AuthController>(AuthController);
   });
 
-  describe('root', () => {
-    it('should return "It\'a test !"', () => {
-      expect(authController.getStringTest()).toBe("It's a test !");
-    });
-  });
+  describe('falseTest', () => {
+    it("Should return test", () => {
+      expect("TEST").toBe("TEST");
+    })
+  })
 });
