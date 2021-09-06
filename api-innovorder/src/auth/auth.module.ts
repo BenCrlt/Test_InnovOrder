@@ -8,7 +8,7 @@ import { UserSchema } from '../schemas/user.schema';
 import { User } from '../schemas/user.schema';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './auth.constants';
 import { JwtStrategy } from './jwt.strategy';
 

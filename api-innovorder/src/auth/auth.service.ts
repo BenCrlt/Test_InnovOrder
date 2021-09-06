@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
     constructor(
         private userService: UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService  
     ) {};
 
     async register(userInfo: CreateUserDto): Promise<User> {
