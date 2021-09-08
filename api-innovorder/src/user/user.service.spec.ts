@@ -61,5 +61,29 @@ describe('UserService', () => {
       })
     })
   })
+
+  describe('update', () => {
+    let user: User;
+    describe('when update is called', () => {
+      beforeEach(async () => {
+        user = await userService.update(UserStub()._id, {username: UserStub().username, password: UserStub().password});
+      })
+      test(' it should return the user updated', () => {
+        expect(user).toEqual(UserStub())
+      })
+    })
+  })
+
+  describe('remove', () => {
+    let user: User;
+    describe('when remove is called', () => {
+      beforeEach(async () => {
+        user = await userService.remove(UserStub()._id);
+      })
+      test('it should return the user removed', () => {
+        expect(user).toEqual(UserStub())
+      })
+    })
+  })
   
 });

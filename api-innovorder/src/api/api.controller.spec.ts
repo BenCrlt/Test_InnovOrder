@@ -1,4 +1,5 @@
 import { HttpModule, HttpService } from '@nestjs/axios';
+import { CacheModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
@@ -12,7 +13,10 @@ describe('ApiController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule],
+      imports: [
+        HttpModule,
+        CacheModule.register()
+      ],
       controllers: [ApiController],
       providers: [ApiService]
     }).compile();
