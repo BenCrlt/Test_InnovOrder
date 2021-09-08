@@ -1,4 +1,4 @@
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -8,6 +8,10 @@ import { jwtConstants } from './auth.constants';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
+import { UserStub } from '../user/user.stub';
+
+jest.mock('./auth.service')
+jest.mock('../user/user.service')
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -27,7 +31,6 @@ describe('AuthController', () => {
       providers: [
         AuthService,
         LocalStrategy,
-        JwtService,
         {
           provide: getModelToken(User.name),
           useValue: {}
@@ -37,9 +40,19 @@ describe('AuthController', () => {
 
     authController = authModule.get<AuthController>(AuthController);
     authService = authModule.get<AuthService>(AuthService);
+    jest.clearAllMocks();
   });
 
-  it('should return JWT object when credentials are valid', async () => {
-    const res = await authService.validateUser({ username: 'Test', password: "azertyuiop" });
-  });
+  describe("Login", () => {
+    let access_token;
+    describe("when Login is called", () => {
+      beforeEach(() => {
+        access_token = authController.login({ username: UserStub().username, password: UserStub().password})
+      })
+
+      test("it should call validate User", () => {
+          expect(authService.validateUser).toBeCalledWith({ username: UserStub().username, password: UserStub().password});
+      })
+    })
+  })
 });
