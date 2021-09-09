@@ -1,4 +1,4 @@
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { CacheModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiController } from './api.controller';

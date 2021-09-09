@@ -1,17 +1,16 @@
 import { JwtModule } from '@nestjs/jwt';
-import { getModelToken } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '../schemas/user.schema';
 import { UserModule } from '../user/user.module';
 import { jwtConstants } from './auth.constants';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { UserStub } from '../user/user.stub';
+import { JwtStrategy } from './jwt.strategy';
+import { token } from './__mocks__/auth.service';
 
 jest.mock('./auth.service')
-jest.mock('../user/user.service')
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -20,7 +19,6 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const authModule: TestingModule = await Test.createTestingModule({
       imports: [
-        UserModule,
         PassportModule,
         JwtModule.register({
           secret: jwtConstants.secret,
@@ -31,10 +29,7 @@ describe('AuthController', () => {
       providers: [
         AuthService,
         LocalStrategy,
-        {
-          provide: getModelToken(User.name),
-          useValue: {}
-        }
+        JwtStrategy
       ],
     }).compile();
 
@@ -46,12 +41,33 @@ describe('AuthController', () => {
   describe("Login", () => {
     let access_token;
     describe("when Login is called", () => {
-      beforeEach(() => {
-        access_token = authController.login({ username: UserStub().username, password: UserStub().password})
+      beforeEach(async () => {
+        access_token = await authController.login({ username: UserStub().username, password: UserStub().password})
       })
 
       test("it should call validate User", () => {
-          expect(authService.validateUser).toBeCalledWith({ username: UserStub().username, password: UserStub().password});
+          expect(authService.login).toBeCalled();
+      })
+
+      test("It should return a token", () => {
+        expect(access_token).toEqual(token);
+      })
+    })
+  });
+
+  describe("Register", () => {
+    describe("when Register is called", () => {
+      let userCreated;
+      beforeEach(async () => {
+        userCreated = await authController.register({ username: UserStub().username, password: UserStub().password})
+      })
+
+      test("it should call validate User", () => {
+          expect(authService.register).toBeCalled();
+      })
+
+      test("It should return the user created", () => {
+        expect(userCreated).toEqual(UserStub());
       })
     })
   })
